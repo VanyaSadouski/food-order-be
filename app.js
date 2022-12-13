@@ -11,6 +11,9 @@ const user = require("./routes/user");
 const orders = require("./routes/orders");
 global.__basedir = __dirname
 
+
+
+
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
