@@ -31,24 +31,7 @@ router.post("/", (req, res)=>{
     const {page, limit, pagination} = req.body;
     Product.paginate({},{page, limit, pagination},(err, products) => {
       if (err) return next(err);
-      Order.find({status:"IN_PROGRESS"}, (err, orders)=>{
-        if(orders.length){
-          orders.forEach((order)=>{
-            order.products.forEach((product)=>{
-              Product.findByIdAndUpdate(product.productId,{anotherOrdersRemainingTime:product.totalPreparingTime}, {
-                new: true
-              },()=>{})
-              res.json(products);
-            })
-          })
-        }else{
-          products.docs.forEach((product)=>{
-            Product.findByIdAndUpdate(product._id,{anotherOrdersRemainingTime:0}, {
-              new: true
-            },()=>{})})
-          res.json(products);
-        }
-      })
+      res.json(products)
     });
 })
 

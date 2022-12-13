@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Order = require("../models/Order-model");
+const Product = require("../models/Product-model");
 const cron = require('node-cron');
 
 cron.schedule('* * * * * *', () => {
@@ -13,6 +14,18 @@ cron.schedule('* * * * * *', () => {
       const resultInMinutes = Math.round(difference / 60000);
       const remainingTimeCount = order.totalPreparingTime - resultInMinutes;
       if(remainingTimeCount<=0 || !remainingTimeCount){
+          order.products.forEach((product)=>{
+            Product.findByIdAndUpdate(
+              product.productId,
+              {
+                anotherOrdersRemainingTime: product.anotherOrdersRemainingTime > 0 ? product.anotherOrdersRemainingTime - product.time : 0
+              },
+              {
+                new: true
+              },
+              ()=>{}
+            )
+          })
           Order.findOneAndUpdate({_id:order._id}, {status:'DONE'}, {
             new: true
           },()=>{})
@@ -29,6 +42,18 @@ router.post("/create", (req, res)=>{
       ...req.body,
       status: 'IN_PROGRESS'
     }
+    req.body.products.forEach((product)=>{
+      Product.findByIdAndUpdate(
+        product.productId,
+        {
+          anotherOrdersRemainingTime: (product.anotherOrdersRemainingTime || 0) + product.totalPreparingTime
+        },
+        {
+          new: true
+        },
+        ()=>{}
+      )
+    })
     Order.create(orderData, (err, orders) => {
       if (err) return next(err);
       res.json(orders);

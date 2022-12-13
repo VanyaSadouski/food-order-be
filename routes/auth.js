@@ -52,44 +52,6 @@ router.post("/register", (req, res) => {
             }
 
             res.send({registered: true})
-            // const transporter = nodemailer.createTransport({
-            //   service: "gmail",
-            //   auth: {
-            //     user: "myblogng2019@gmail.com",
-            //     pass: "testmail2019"
-            //   }
-            // });
-
-            // const hostName;
-
-            // if (process.env.NODE_ENV !== "production") {
-            //   hostName = "localhost:3000";
-            // } else {
-            //   // hostName = "my-blog-client-angular.herokuapp.com";
-            // }
-            // const mailOptions = {
-            //   from: "myblogng2019@gmail.com",
-            //   to: newUser.email,
-            //   subject: "Account Verification Token for MyBlog",
-            //   text:
-            //     "Hello,\n\n" +
-            //     "Please verify your account by clicking the link: \nhttp://" +
-            //     hostName +
-            //     "/auth/confirmation/" +
-            //     token.token +
-            //     ".\n"
-            // };
-
-            // transporter.sendMail(mailOptions, function(err) {
-            //   if (err) {
-            //     return res.status(500).send({ msg: err.message });
-            //   }
-            //   return res.json({
-            //     success: true,
-            //     msg:
-            //       "A verification email has been sent to " + newUser.email + "."
-            //   });
-            // });
           });
         });
       }
@@ -134,10 +96,6 @@ router.post("/confirmation", function(req, res) {
     }
   );
 });
-
-const verifyJWT = (req, res, next) => {
-
-}
 
 router.get("/check", (req,res)=>{
   const token = req.headers["authorization"];
